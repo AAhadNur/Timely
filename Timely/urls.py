@@ -7,4 +7,7 @@ urlpatterns = [
 
     ## Core App
     path('', include('core.urls')),
+
+    ## User App
+    path('myaccount/', include('user.urls')),
 ]
