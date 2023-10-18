@@ -10,4 +10,7 @@ urlpatterns = [
 
     ## User App
     path('myaccount/', include('user.urls')),
+
+    ## Team App
+    path('team/', include('team.urls')),
 ]
