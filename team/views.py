@@ -1,5 +1,7 @@
 
 import random
+import stripe
+from datetime import datetime
 
 from django.conf import settings
 from django.contrib import messages
@@ -88,3 +90,82 @@ def invite(request):
                 messages.info(request, 'The users has already been invited')
 
     return render(request, 'team/invite.html', {'team': team})
+
+
+
+
+@login_required
+def invite(request):
+    team = get_object_or_404(Team, pk=request.user.userprofile.active_team_id, status=Team.ACTIVE)
+
+    if request.method == 'POST':
+        email = request.POST.get('email')
+
+        if email:
+            invitations = Invitation.objects.filter(team=team, email=email)
+
+            if not invitations:
+                code = ''.join(random.choice('abcdefghijklmnopqrstuvwxyz123456789') for i in range(4))
+                invitation = Invitation.objects.create(team=team, email=email, code=code)
+
+                messages.info(request, 'The user was invited')
+
+                send_invitation(email, code, team)
+
+                return redirect('team:team', team_id=team.id)
+            else:
+                messages.info(request, 'The users has already been invited')
+
+    return render(request, 'team/invite.html', {'team': team})
+
+
+
+
+@login_required
+def plans(request):
+    team = get_object_or_404(Team, pk=request.user.userprofile.active_team_id, status=Team.ACTIVE)
+    error = ''
+
+    if request.GET.get('cancel_plan', ''):
+        try:
+            plan_default = Plan.objects.get(is_default=True)
+
+            team.plan = plan_default
+            team.plan_status = Team.PLAN_CANCELED
+            team.save()
+
+            stripe.api_key = settings.STRIPE_SECRET_KEY
+            stripe.Subscription.delete(team.stripe_subscription_id)
+        except Exception:
+            error = 'Something went wrong with the cancelation. Please try again!'
+
+    context = {
+        'team': team,
+        'error': error,
+        'stripe_pub_key': settings.STRIPE_PUBLISHABLE_KEY
+    }
+
+    return render(request, 'team/plans.html', context)
+
+
+
+
+
+@login_required
+def plans_thankyou(request):
+    error = ''
+
+    try:
+        team = get_object_or_404(Team, pk=request.user.userprofile.active_team_id, status=Team.ACTIVE)
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        subscription = stripe.Subscription.retrieve(team.stripe_subscription_id)
+        product = stripe.Product.retrieve(subscription.plan.product)
+
+        team.plan_status = Team.PLAN_ACTIVE
+        team.plan_end_date = datetime.fromtimestamp(subscription.current_period_end)
+        team.plan = Plan.objects.get(title=product.name)
+        team.save()
+    except Exception:
+        error = 'There something wrong. Please try again!'
+
+    return render(request, 'team/plans_thankyou.html', {'error': error})

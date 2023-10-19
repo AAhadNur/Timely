@@ -21,7 +21,12 @@
 
                 <div class="media-content">
                     <p class="title is-3">{% firstof user.get_full_name user.username %}</p>
-                    <p class="subtitle is-6">{{ user.email }}</p>
+                    <p class="subtitle is-6">{{ user.email }} &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                        
+                        <a href="{% url 'plans' %}">
+                            Plan : {{ user.plan }}
+                        </a>
+                    </p>
                 </div>
             </div>
 

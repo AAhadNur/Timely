@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 from .models import Userprofile
-from team.models import Team, Invitation
+from team.models import Team, Invitation, Plan
 from team.utils import send_invitation_accepted
 
 
@@ -32,6 +32,13 @@ def edit_profile(request):
         request.user.last_name = request.POST.get('last_name', '')
         request.user.email = request.POST.get('email', '')
         request.user.save()
+
+        plan_name = request.POST.get('plan_name', 'Free Plan')
+
+        Plan.objects.create(
+            title = plan_name
+        )
+
 
         if request.FILES:
             avatar = request.FILES['avatar']

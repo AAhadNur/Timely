@@ -11,7 +11,7 @@ from .models import Project, Task, Entry
 from team.models import Team
 
 
-#
+
 # View
 
 @login_required

@@ -43,6 +43,14 @@
                 </div>
 
                 <div class="field">
+                    <label>Plan Name</label>
+
+                    <div class="control">
+                        <input type="text" name="plan_name" id="plan_name" class="input"{% if request.user.plan.title %} value="{{ request.user.plan.title }}"{% endif %}>
+                    </div>
+                </div>
+
+                <div class="field">
                     <label>Avatar</label>
 
                     <figure class="image is-64x64">

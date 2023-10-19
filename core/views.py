@@ -8,6 +8,7 @@ from team.models import Invitation
 from user.models import Userprofile
 
 
+
 #
 # Views
 
@@ -33,9 +34,7 @@ def signup(request):
             user = form.save()
             user.email = user.username
             user.save()
-
-            userprofile = Userprofile.objects.create(user=user)
-
+            Userprofile.objects.create(user=user)
             login(request, user)
 
             invitations = Invitation.objects.filter(email=user.email, status=Invitation.INVITED)

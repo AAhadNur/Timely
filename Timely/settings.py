@@ -24,6 +24,31 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = []
 
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'myaccount'
+LOGOUT_REDIRECT_URL = 'frontpage'
+
+# Email Configuration
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS')
+DEFAULT_EMAIL_FROM = config('DEFAULT_EMAIL_FROM')
+
+# Assigning Base URL
+WEBSITE_URL = 'http://127.0.0.1:8000'
+ACCEPTATION_URL = WEBSITE_URL + '/signup/'
+
+# Stripe Configuration
+STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
+
+STRIPE_BASIC_PRICE_ID = config('STRIPE_BASIC_PRICE_ID')
+STRIPE_PRO_PRICE_ID = config('STRIPE_PRO_PRICE_ID')
+
+STRIPE_WEBHOOK_KEY = config('STRIPE_WEBHOOK_KEY')
+
 
 # Application definition
 
@@ -40,6 +65,8 @@ INSTALLED_APPS = [
     'project',
     'team',
     'user',
+
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -65,6 +92,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'team.context_processors.active_team',
+                'project.context_processors.active_entry',
             ],
         },
     },

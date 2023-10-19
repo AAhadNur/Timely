@@ -5,10 +5,12 @@ from django.db import models
 # Models
 
 class Plan(models.Model):
+    owner = models.OneToOneField(User, related_name='plan', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    max_projects_per_team = models.IntegerField(default=0)
-    max_members_per_team = models.IntegerField(default=0)
-    max_tasks_per_project = models.IntegerField(default=0)
+    max_team_num = models.IntegerField(default=3)
+    max_projects_per_team = models.IntegerField(default=3)
+    max_members_per_team = models.IntegerField(default=7)
+    max_tasks_per_project = models.IntegerField(default=10)
     price = models.IntegerField(default=0)
     is_default = models.BooleanField(default=False)
 
