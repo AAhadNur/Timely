@@ -8,12 +8,6 @@ urlpatterns = [
     ## Core App
     path('', include('core.urls')),
 
-    ## User App
-    path('myaccount/', include('user.urls')),
-
-    ## Team App
-    path('team/', include('team.urls')),
-
-    ## Project App
-    path('project/', include('project.urls')),
+    ## Dashboard App
+    path('dashboard/', include('dashboard.urls')),
 ]

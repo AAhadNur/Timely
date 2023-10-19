@@ -10,6 +10,10 @@ db.sqlite3-journal
 */migrations/
 
 
+### Demo Folders
+demo/
+
+
 ### Static and Media Files
 static/
 media/
