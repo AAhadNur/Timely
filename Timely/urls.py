@@ -13,4 +13,7 @@ urlpatterns = [
 
     ## Team App
     path('team/', include('team.urls')),
+
+    ## Project App
+    path('project/', include('project.urls')),
 ]
