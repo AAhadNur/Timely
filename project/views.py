@@ -215,3 +215,4 @@ def track_entry(request, entry_id):
     }
 
     return render(request, 'project/track_entry.html', context)
+
