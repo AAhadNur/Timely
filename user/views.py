@@ -10,19 +10,19 @@ from team.utils import send_invitation_accepted
 # Create your views here.
 
 
-
 @login_required
 def myaccount(request):
-    teams = request.user.teams.exclude(pk=request.user.userprofile.active_team_id)
-    invitations = Invitation.objects.filter(email=request.user.email, status=Invitation.INVITED)
+    teams = request.user.teams.exclude(
+        pk=request.user.userprofile.active_team_id)
+    invitations = Invitation.objects.filter(
+        email=request.user.email, status=Invitation.INVITED)
 
-    context = {   
-        'teams':teams,
-        'invitations':invitations,
+    context = {
+        'teams': teams,
+        'invitations': invitations,
     }
 
     return render(request, 'user/myaccount.html', context)
-
 
 
 @login_required
@@ -36,9 +36,9 @@ def edit_profile(request):
         plan_name = request.POST.get('plan_name', 'Free Plan')
 
         Plan.objects.create(
-            title = plan_name
+            owner=request.user,
+            title=plan_name
         )
-
 
         if request.FILES:
             avatar = request.FILES['avatar']
@@ -49,9 +49,8 @@ def edit_profile(request):
         messages.info(request, 'The changes was saved')
 
         return redirect('myaccount')
-    
-    return render(request, 'user/edit_profile.html')
 
+    return render(request, 'user/edit_profile.html')
 
 
 @login_required
@@ -59,7 +58,8 @@ def accept_invitation(request):
     if request.method == 'POST':
         code = request.POST.get('code')
 
-        invitations = Invitation.objects.filter(code=code, email=request.user.email)
+        invitations = Invitation.objects.filter(
+            code=code, email=request.user.email)
 
         if invitations:
             invitation = invitations[0]
@@ -83,9 +83,3 @@ def accept_invitation(request):
             messages.info(request, 'Invitation was not found')
     else:
         return render(request, 'user/accept_invitation.html')
-
-
-
-
-
-

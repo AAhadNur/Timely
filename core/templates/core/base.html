@@ -23,7 +23,14 @@
                             <a href="{% url 'signup' %}" class="navbar-item">Signup</a>
                             <a href="{% url 'plans' %}" class="navbar-item">Plans</a>
                         {% else %}
-                            <a href="{% url 'logout' %}" class="navbar-item">Logout</a>
+                            <div class="navbar-item">
+                                <div class="buttons">
+                                    <a class="button is-info">
+                                        <span>Upgrade to Premium</span>
+                                    </a>
+                                </div>
+                            </div>
+                            
                             <a href="{% url 'dashboard' %}" class="navbar-item">Dashboard</a>
                             <a href="{% url 'project:projects' %}" class="navbar-item">Projects</a>
  

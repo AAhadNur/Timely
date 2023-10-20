@@ -4,18 +4,34 @@ from django.db import models
 
 # Models
 
+
 class Plan(models.Model):
-    owner = models.OneToOneField(User, related_name='plan', on_delete=models.CASCADE)
-    title = models.CharField(max_length=255)
+
+    FREE = 'free'
+    BASIC = 'basic'
+    PRO = 'pro'
+
+    PLAN_CHOICES = (
+        (FREE, 'Free'),
+        (BASIC, 'Basic'),
+        (PRO, 'Pro'),
+    )
+
+    owner = models.OneToOneField(
+        User, related_name='plan', on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, null=True, blank=True)
+    plan_choice = models.CharField(
+        max_length=10, choices=PLAN_CHOICES, default=FREE)
     max_team_num = models.IntegerField(default=3)
-    max_projects_per_team = models.IntegerField(default=3)
+    max_projects_per_team = models.IntegerField(default=10)
     max_members_per_team = models.IntegerField(default=7)
-    max_tasks_per_project = models.IntegerField(default=10)
+    max_tasks_per_project = models.IntegerField(default=25)
     price = models.IntegerField(default=0)
     is_default = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.title 
+        return str(self.plan_choice).upper()
+
 
 class Team(models.Model):
     # Status
@@ -37,24 +53,30 @@ class Team(models.Model):
         (PLAN_CANCELED, 'Canceled')
     )
 
-
     # Fields
     title = models.CharField(max_length=255)
     members = models.ManyToManyField(User, related_name='teams')
-    created_by = models.ForeignKey(User, related_name='created_teams', on_delete=models.CASCADE)
+    created_by = models.ForeignKey(
+        User, related_name='created_teams', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=10, choices=CHOICES_STATUS, default=ACTIVE)
-    plan = models.ForeignKey(Plan, related_name='teams', on_delete=models.CASCADE)
+    status = models.CharField(
+        max_length=10, choices=CHOICES_STATUS, default=ACTIVE)
+    plan = models.ForeignKey(Plan, related_name='teams',
+                             on_delete=models.CASCADE)
     plan_end_date = models.DateTimeField(blank=True, null=True)
-    plan_status = models.CharField(max_length=20, choices=CHOICES_PLAN_STATUS, default=PLAN_ACTIVE)
-    stripe_customer_id = models.CharField(max_length=255, blank=True, null=True)
-    stripe_subscription_id = models.CharField(max_length=255, blank=True, null=True)
+    plan_status = models.CharField(
+        max_length=20, choices=CHOICES_PLAN_STATUS, default=PLAN_ACTIVE)
+    stripe_customer_id = models.CharField(
+        max_length=255, blank=True, null=True)
+    stripe_subscription_id = models.CharField(
+        max_length=255, blank=True, null=True)
 
     class Meta:
         ordering = ['title']
-    
+
     def __str__(self):
         return self.title
+
 
 class Invitation(models.Model):
     # Status
@@ -67,10 +89,12 @@ class Invitation(models.Model):
         (ACCEPTED, 'Accepted')
     )
 
-    team = models.ForeignKey(Team, related_name='invitations', on_delete=models.CASCADE)
+    team = models.ForeignKey(
+        Team, related_name='invitations', on_delete=models.CASCADE)
     email = models.EmailField()
     code = models.CharField(max_length=20)
-    status = models.CharField(max_length=20, choices=CHOICES_STATUS, default=INVITED)
+    status = models.CharField(
+        max_length=20, choices=CHOICES_STATUS, default=INVITED)
     date_sent = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

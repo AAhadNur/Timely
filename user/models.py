@@ -7,7 +7,9 @@ from django.db import models
 class Userprofile(models.Model):
     user = models.OneToOneField(User, related_name='userprofile', on_delete=models.CASCADE)
     active_team_id = models.IntegerField(default=0)
+    bio = models.CharField(max_length=300, blank=True, null=True)
     avatar = models.ImageField(upload_to='uploads/avatars/', blank=True, null=True)
+    
 
     def get_avatar(self):
         if self.avatar:
