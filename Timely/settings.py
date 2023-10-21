@@ -12,7 +12,6 @@ ENV_FILE = os.path.join(ENV_BASE_DIR, '..', '.env')
 config = AutoConfig(search_path=ENV_FILE)
 
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -35,6 +34,7 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = config('EMAIL_PORT')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS')
 DEFAULT_EMAIL_FROM = config('DEFAULT_EMAIL_FROM')
+
 
 # Assigning Base URL
 WEBSITE_URL = 'http://127.0.0.1:8000'
@@ -107,8 +107,12 @@ WSGI_APPLICATION = 'Timely.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
     }
 }
 
